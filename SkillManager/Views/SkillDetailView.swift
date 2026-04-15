@@ -54,7 +54,7 @@ struct SkillDetailView: View {
                 Divider()
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("README")
+                    Text("skill.md")
                         .font(.caption)
                         .foregroundColor(.secondary)
 
@@ -68,8 +68,8 @@ struct SkillDetailView: View {
                                 .foregroundColor(.primary)
                                 .multilineTextAlignment(.leading)
                                 .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(8)
                         }
-                        .frame(maxHeight: 300)
                         .background(Color(.textBackgroundColor))
                         .cornerRadius(6)
                     }
@@ -173,8 +173,10 @@ struct SkillDetailView: View {
     private func loadReadme() {
         isLoadingReadme = true
 
-        // Try README.md, then README
+        // Try skill.md first (used by Claude skills), then README.md, then README
         let candidates = [
+            skill.path.appendingPathComponent("skill.md"),
+            skill.path.appendingPathComponent("skill"),
             skill.path.appendingPathComponent("README.md"),
             skill.path.appendingPathComponent("README"),
             skill.path.appendingPathComponent("readme.md"),

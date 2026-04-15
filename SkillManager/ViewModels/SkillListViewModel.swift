@@ -10,6 +10,8 @@ class SkillListViewModel: ObservableObject {
     @Published var selectedSkill: Skill?
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
+    @Published var expandedGroups: Set<String> = []
+    @Published var expandedWorkspaces: Set<UUID> = []
 
     private let scanner: SkillScanner
     private let sqliteReader: DuetSQLiteReader
@@ -23,6 +25,8 @@ class SkillListViewModel: ObservableObject {
         self.scanner = scanner
         self.sqliteReader = sqliteReader
         self.skillService = skillService
+        // By default expand all groups on first load
+        expandAllGroups()
     }
 
     struct GlobalGroup: Identifiable {
@@ -45,6 +49,43 @@ class SkillListViewModel: ObservableObject {
                 return filtered.isEmpty ? nil : GlobalGroup(name: name, path: path, skills: filtered)
             }
         }
+    }
+
+    func expandAllGroups() {
+        // Auto-expand all groups on startup
+        let paths = scanner.allGlobalPaths()
+        expandedGroups = Set(paths)
+        // Auto-expand all workspaces
+        expandedWorkspaces = Set(workspaces.map { $0.id })
+    }
+
+    func toggleGroupExpanded(_ path: String) {
+        if expandedGroups.contains(path) {
+            expandedGroups.remove(path)
+        } else {
+            expandedGroups.insert(path)
+        }
+    }
+
+    func isGroupExpanded(_ path: String) -> Bool {
+        return expandedGroups.contains(path)
+    }
+
+    func toggleWorkspaceExpanded(_ id: UUID) {
+        if expandedWorkspaces.contains(id) {
+            expandedWorkspaces.remove(id)
+        } else {
+            expandedWorkspaces.insert(id)
+        }
+    }
+
+    func isWorkspaceExpanded(_ id: UUID) -> Bool {
+        return expandedWorkspaces.contains(id)
+    }
+
+    func removeCustomGlobalPath(_ path: String) {
+        scanner.removeCustomGlobalPath(path)
+        Task { await load() }
     }
 
     var allSkills: [Skill] {
