@@ -1,0 +1,283 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		46B8FA8E2D7F3A3E00D1D785 /* SkillManagerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B8FA8D2D7F3A3E00D1D785 /* SkillManagerApp.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		46B8FA912D7F3A3E00D1D785 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 46B8FA7E2D7F3A3E00D1D785 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 46B8FA842D7F3A3E00D1D785;
+			remoteInfo = SkillManager;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		46B8FA7C2D7F3A3E00D1D785 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		46B8FA8D2D7F3A3E00D1D785 /* SkillManagerApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "App/SkillManagerApp.swift"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		46B8FA812D7F3A3E00D1D785 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		46B8FA792D7F3A3E00D1D785 /* SkillManager */ = {
+			isa = PBXGroup;
+			children = (
+				46B8FA8D2D7F3A3E00D1D785 /* SkillManagerApp.swift */,
+				46B8FA7C2D7F3A3E00D1D785 /* Info.plist */,
+				46B8FA8B2D7F3A3E00D1D785 /* App */,
+				46B8FA8C2D7F3A3E00D1D785 /* Models */,
+				46B8FA8D2D7F3A3E00D1D785 /* Views */,
+				46B8FA8E2D7F3A3E00D1D785 /* ViewModels */,
+				46B8FA8F2D7F3A3E00D1D785 /* Services */,
+				46B8FA902D7F3A3E00D1D785 /* Resources */,
+			);
+			path = SkillManager;
+			sourceTree = "<group>";
+		};
+		46B8FA7A2D7F3A3E00D1D785 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				46B8FA8A2D7F3A3E00D1D785 /* SkillManager.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		46B8FA8B2D7F3A3E00D1D785 /* App */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		46B8FA8C2D7F3A3E00D1D785 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		46B8FA8D2D7F3A3E00D1D785 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		46B8FA8E2D7F3A3E00D1D785 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		46B8FA8F2D7F3A3E00D1D785 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		46B8FA902D7F3A3E00D1D785 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		46B8FA842D7F3A3E00D1D785 /* SkillManager */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 46B8FA932D7F3A3E00D1D785 /* Build configuration list for PBXNativeTarget "SkillManager" */;
+			buildPhases = (
+				46B8FA802D7F3A3E00D1D785 /* Sources */,
+				46B8FA812D7F3A3E00D1D785 /* Frameworks */,
+				46B8FA822D7F3A3E00D1D785 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SkillManager;
+			productName = SkillManager;
+			productReference = 46B8FA8A2D7F3A3E00D1D785 /* SkillManager.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		46B8FA7E2D7F3A3E00D1D785 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1400;
+				ORGANIZATIONNAME = "Your Company";
+				TargetAttributes = {
+					46B8FA842D7F3A3E00D1D785 = {
+						CreatedOnToolsVersion = 14.0;
+						DevelopmentTeam = none;
+					};
+				};
+			};
+			buildConfigurationList = 46B8FA862D7F3A3E00D1D785 /* Build configuration list for PBXProject "SkillManager" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				BaseInternationalization,
+			);
+			mainGroup = 46B8FA792D7F3A3E00D1D785 /* SkillManager */;
+			productRefGroup = 46B8FA7A2D7F3A3E00D1D785 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				46B8FA842D7F3A3E00D1D785 /* SkillManager */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		46B8FA822D7F3A3E00D1D785 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		46B8FA802D7F3A3E00D1D785 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				46B8FA8E2D7F3A3E00D1D785 /* SkillManagerApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		46B8FA922D7F3A3E00D1D785 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			containerPortal = 46B8FA7E2D7F3A3E00D1D785 /* Project object */;
+			remoteGlobalIDString = 46B8FA842D7F3A3E00D1D785;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		46B8FA872D7F3A3E00D1D785 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECTIVE_C = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_CODE_COVERAGE = 0;
+				CLANG_ENABLE_MODULES = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = SkillManager/Info.plist;
+				INFOPLIST_KEY_LSMinimumSystemVersion = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.SkillManager;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+				SWIFTUI_PREVIEWS_SUPPORTED = YES;
+			};
+			name = Debug;
+		};
+		46B8FA882D7F3A3E00D1D785 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECTIVE_C = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_CODE_COVERAGE = 0;
+				CLANG_ENABLE_MODULES = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = SkillManager/Info.plist;
+				INFOPLIST_KEY_LSMinimumSystemVersion = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yourcompany.SkillManager;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		46B8FA942D7F3A3E00D1D785 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+			};
+			name = Debug;
+		};
+		46B8FA952D7F3A3E00D1D785 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		46B8FA862D7F3A3E00D1D785 /* Build configuration list for PBXProject "SkillManager" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				46B8FA872D7F3A3E00D1D785 /* Debug */,
+				46B8FA882D7F3A3E00D1D785 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		46B8FA932D7F3A3E00D1D785 /* Build configuration list for PBXNativeTarget "SkillManager" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				46B8FA942D7F3A3E00D1D785 /* Debug */,
+				46B8FA952D7F3A3E00D1D785 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+/* End XCVersionGroup section */
+
+	};
+	rootObject = 46B8FA7E2D7F3A3E00D1D785 /* Project object */;
+}
