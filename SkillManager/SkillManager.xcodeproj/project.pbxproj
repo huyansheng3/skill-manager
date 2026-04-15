@@ -39,7 +39,6 @@
 		46B8FA792D7F3A3E00D1D785 /* SkillManager */ = {
 			isa = PBXGroup;
 			children = (
-				46B8FA8D2D7F3A3E00D1D785 /* SkillManagerApp.swift */,
 				46B8FA7C2D7F3A3E00D1D785 /* Info.plist */,
 				46B8FA8B2D7F3A3E00D1D785 /* App */,
 				46B8FA8C2D7F3A3E00D1D785 /* Models */,
@@ -62,6 +61,7 @@
 		46B8FA8B2D7F3A3E00D1D785 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				46B8FA8D2D7F3A3E00D1D785 /* SkillManagerApp.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";

@@ -18,10 +18,5 @@
     <string>1</string>
     <key>LSMinimumSystemVersion</key>
     <string>13.0</string>
-    <key>NSApplicationDelegateAdaptorInfo</key>
-    <dict>
-        <key>NSApplicationDelegateClass</key>
-        <string>SkillManagerApp</string>
-    </dict>
 </dict>
 </plist>
