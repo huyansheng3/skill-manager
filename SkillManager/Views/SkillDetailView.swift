@@ -146,7 +146,7 @@ struct SkillDetailView_Previews: PreviewProvider {
         SkillDetailView(skill: Skill(
             id: UUID(),
             name: "test-skill",
-            description: "This is a test skill",
+            description: "This is a test skill for managing Claude Code / CodeFlicker agent skills.",
             author: "Test Author",
             path: URL(fileURLWithPath: "/test"),
             location: .global,

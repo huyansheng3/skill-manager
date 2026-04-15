@@ -70,14 +70,9 @@ class SkillListViewModel: ObservableObject {
             // Load skills for each workspace in parallel
             await withTaskGroup(of: (UUID, [Skill]?).self) { group in
                 for workspace in workspaces {
-                    group.addTask {
-                        do {
-                            let skills = await scanner.scanSkills(in: workspace)
-                            return (workspace.id, skills)
-                        } catch {
-                            print("SkillListViewModel: Failed to scan skills for workspace '\(workspace.name)' (id: \(workspace.id)): \(error.localizedDescription)")
-                            return (workspace.id, nil)
-                        }
+                    group.addTask { [self] in
+                        let skills = await self.scanner.scanSkills(in: workspace)
+                        return (workspace.id, skills)
                     }
                 }
                 for await (id, skills) in group {

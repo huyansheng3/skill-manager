@@ -45,7 +45,7 @@ actor DuetSQLiteReader {
                   let rootPathBytes = rootPathBytes else { continue }
 
             let idString = String(cString: idBytes)
-            let name = nameBytes != nil ? String(cString: nameBytes) : ""
+            let name = nameBytes != nil ? String(cString: nameBytes!) : ""
             let rootPath = String(cString: rootPathBytes)
 
             guard let uuid = UUID(uuidString: idString) else { continue }
