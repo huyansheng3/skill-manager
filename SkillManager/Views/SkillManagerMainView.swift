@@ -13,10 +13,8 @@ struct SkillManagerMainView: View {
                         .padding(.horizontal, 8)
                         .padding(.top, 8)
 
-                    List {
-                        WorkspaceSidebarView(selectedWorkspace: $selectedWorkspace)
-                    }
-                    .listStyle(.sidebar)
+                    WorkspaceSidebarView(selectedWorkspace: $selectedWorkspace)
+                        .listStyle(.sidebar)
                 }
                 .frame(minWidth: 280, maxWidth: 320)
 
@@ -45,26 +43,23 @@ struct SkillManagerMainView: View {
                     }) {
                         Image(systemName: "arrow.clockwise")
                     }
+                    .accessibilityLabel("Refresh skills")
                 }
             }
         }
         .onAppear {
             Task { await viewModel.load() }
         }
-        .alert(item: Binding(
-            get: { viewModel.errorMessage.map { ErrorWrapper(error: $0) } },
-            set: { viewModel.errorMessage = $0?.error }
-        )) { wrapper in
-            Alert(
-                title: Text("Error"),
-                message: Text(wrapper.error),
-                dismissButton: .default(Text("OK"))
+        .alert(
+            "Error",
+            isPresented: Binding(
+                get: { viewModel.errorMessage != nil },
+                set: { if !$0 { viewModel.errorMessage = nil } }
             )
+        ) {
+            Button("OK") {}
+        } message: {
+            Text(viewModel.errorMessage ?? "Unknown error")
         }
     }
-}
-
-struct ErrorWrapper: Identifiable {
-    let id = UUID()
-    let error: String
 }

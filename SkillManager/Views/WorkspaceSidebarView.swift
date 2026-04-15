@@ -5,7 +5,7 @@ struct WorkspaceSidebarView: View {
     @Binding var selectedWorkspace: Workspace?
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        List {
             Text("Global Skills (\(viewModel.filteredGlobalSkills.count))")
                 .font(.caption)
                 .foregroundColor(.secondary)
