@@ -8,6 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		46B8FA8E2D7F3A3E00D1D785 /* SkillManagerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B8FA8D2D7F3A3E00D1D785 /* SkillManagerApp.swift */; };
+		46B8FA982D7F3A3E00D1D785 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B8FA992D7F3A3E00D1D785 /* SearchBar.swift */; };
+		46B8FA9A2D7F3A3E00D1D785 /* SkillRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B8FA9B2D7F3A3E00D1D785 /* SkillRowView.swift */; };
+		46B8FA9C2D7F3A3E00D1D785 /* WorkspaceSidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B8FA9D2D7F3A3E00D1D785 /* WorkspaceSidebarView.swift */; };
+		46B8FA9E2D7F3A3E00D1D785 /* SkillDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B8FA9F2D7F3A3E00D1D785 /* SkillDetailView.swift */; };
+		46B8FAA02D7F3A3E00D1D785 /* SkillListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B8FAA12D7F3A3E00D1D785 /* SkillListView.swift */; };
+		46B8FAA22D7F3A3E00D1D785 /* SkillManagerMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B8FAA32D7F3A3E00D1D785 /* SkillManagerMainView.swift */; };
+		46B8FAA52D7F3A3E00D1D785 /* SkillListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B8FAA42D7F3A3E00D1D785 /* SkillListViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -23,6 +30,13 @@
 /* Begin PBXFileReference section */
 		46B8FA7C2D7F3A3E00D1D785 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		46B8FA8D2D7F3A3E00D1D785 /* SkillManagerApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "App/SkillManagerApp.swift"; sourceTree = "<group>"; };
+		46B8FA992D7F3A3E00D1D785 /* SearchBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Views/SearchBar.swift"; sourceTree = "<group>"; };
+		46B8FA9B2D7F3A3E00D1D785 /* SkillRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Views/SkillRowView.swift"; sourceTree = "<group>"; };
+		46B8FA9D2D7F3A3E00D1D785 /* WorkspaceSidebarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Views/WorkspaceSidebarView.swift"; sourceTree = "<group>"; };
+		46B8FA9F2D7F3A3E00D1D785 /* SkillDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Views/SkillDetailView.swift"; sourceTree = "<group>"; };
+		46B8FAA12D7F3A3E00D1D785 /* SkillListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Views/SkillListView.swift"; sourceTree = "<group>"; };
+		46B8FAA32D7F3A3E00D1D785 /* SkillManagerMainView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Views/SkillManagerMainView.swift"; sourceTree = "<group>"; };
+		46B8FAA42D7F3A3E00D1D785 /* SkillListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ViewModels/SkillListViewModel.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +90,12 @@
 		46B8FA962D7F3A3E00D1D785 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				46B8FA992D7F3A3E00D1D785 /* SearchBar.swift */,
+				46B8FA9B2D7F3A3E00D1D785 /* SkillRowView.swift */,
+				46B8FA9D2D7F3A3E00D1D785 /* WorkspaceSidebarView.swift */,
+				46B8FA9F2D7F3A3E00D1D785 /* SkillDetailView.swift */,
+				46B8FAA12D7F3A3E00D1D785 /* SkillListView.swift */,
+				46B8FAA32D7F3A3E00D1D785 /* SkillManagerMainView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -83,6 +103,7 @@
 		46B8FA972D7F3A3E00D1D785 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				46B8FAA42D7F3A3E00D1D785 /* SkillListViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -173,6 +194,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				46B8FA8E2D7F3A3E00D1D785 /* SkillManagerApp.swift in Sources */,
+				46B8FA982D7F3A3E00D1D785 /* SearchBar.swift in Sources */,
+				46B8FA9A2D7F3A3E00D1D785 /* SkillRowView.swift in Sources */,
+				46B8FA9C2D7F3A3E00D1D785 /* WorkspaceSidebarView.swift in Sources */,
+				46B8FA9E2D7F3A3E00D1D785 /* SkillDetailView.swift in Sources */,
+				46B8FAA02D7F3A3E00D1D785 /* SkillListView.swift in Sources */,
+				46B8FAA22D7F3A3E00D1D785 /* SkillManagerMainView.swift in Sources */,
+				46B8FAA52D7F3A3E00D1D785 /* SkillListViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
