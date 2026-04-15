@@ -31,10 +31,12 @@ actor FileSystem {
                     let values = try url.resourceValues(forKeys: [.isDirectoryKey])
                     return values.isDirectory ?? false
                 } catch {
+                    print("FileSystem.listDirectories error: \(error.localizedDescription)")
                     return false
                 }
             }
         } catch {
+            print("FileSystem.listDirectories error: \(error.localizedDescription)")
             return []
         }
     }
@@ -50,6 +52,7 @@ actor FileSystem {
                     let size = try fileURL.resourceValues(forKeys: [.fileSizeKey]).fileSize ?? 0
                     totalSize += Int64(size)
                 } catch {
+                    print("FileSystem.calculateDirectorySize error: \(error.localizedDescription)")
                     continue
                 }
             }
@@ -73,6 +76,7 @@ actor FileSystem {
         do {
             return try String(contentsOf: url, encoding: .utf8)
         } catch {
+            print("FileSystem.readTextFile error: \(error.localizedDescription)")
             return nil
         }
     }
