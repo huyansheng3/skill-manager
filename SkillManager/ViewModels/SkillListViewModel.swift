@@ -25,6 +25,34 @@ class SkillListViewModel: ObservableObject {
         self.skillService = skillService
     }
 
+    struct GlobalGroup: Identifiable {
+        let id = UUID()
+        let name: String
+        let path: String
+        let skills: [Skill]
+    }
+
+    var globalGroups: [GlobalGroup] {
+        let paths = [
+            ("Claude", "~/.claude/skills"),
+            ("CodeFlicker", "~/.codeflicker/skills")
+        ]
+
+        return paths.compactMap { (name, path) in
+            let expandedPath = (path as NSString).expandingTildeInPath
+            let url = URL(fileURLWithPath: expandedPath)
+            let groupSkills = globalSkills.filter { $0.path.deletingLastPathComponent() == url }
+            if searchText.isEmpty {
+                return GlobalGroup(name: name, path: path, skills: groupSkills)
+            } else {
+                let filtered = groupSkills.filter {
+                    $0.displayName.lowercased().contains(searchText.lowercased())
+                }
+                return filtered.isEmpty ? nil : GlobalGroup(name: name, path: path, skills: filtered)
+            }
+        }
+    }
+
     var allSkills: [Skill] {
         var result = globalSkills
         for (_, skills) in workspaceSkills {
@@ -37,14 +65,6 @@ class SkillListViewModel: ObservableObject {
             }
         }
 
-        return result
-    }
-
-    var filteredGlobalSkills: [Skill] {
-        var result = globalSkills
-        if !searchText.isEmpty {
-            result = result.filter { $0.displayName.lowercased().contains(searchText.lowercased()) }
-        }
         return result
     }
 

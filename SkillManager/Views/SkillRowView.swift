@@ -6,12 +6,13 @@ struct SkillRowView: View {
 
     var body: some View {
         HStack {
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 3) {
                 Text(skill.displayName)
-                    .fontWeight(isSelected ? .semibold : .regular)
+                    .font(.callout)
+                    .fontWeight(isSelected ? .semibold : .medium)
                     .foregroundColor(skill.isEnabled ? .primary : .secondary)
 
-                if let description = skill.description {
+                if let description = skill.description, !description.isEmpty {
                     Text(description)
                         .font(.caption)
                         .foregroundColor(.secondary)
@@ -28,12 +29,14 @@ struct SkillRowView: View {
                     .padding(.horizontal, 6)
                     .padding(.vertical, 2)
                     .background(Color.secondary.opacity(0.2))
-                    .cornerRadius(4)
+                    .clipShape(Capsule())
             }
         }
         .padding(.vertical, 6)
-        .padding(.horizontal, 8)
-        .background(isSelected ? Color.accentColor.opacity(0.1) : Color.clear)
-        .cornerRadius(6)
+        .padding(.horizontal, 6)
+        .background(
+            RoundedRectangle(cornerRadius: 6)
+                .fill(isSelected ? Color.accentColor.opacity(0.15) : Color.clear)
+        )
     }
 }

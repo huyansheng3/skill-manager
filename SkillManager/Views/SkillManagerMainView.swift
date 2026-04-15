@@ -24,15 +24,20 @@ struct SkillManagerMainView: View {
                 if let selectedSkill = viewModel.selectedSkill {
                     SkillDetailView(skill: selectedSkill)
                 } else {
-                    VStack(spacing: 12) {
-                        Image(systemName: "folder")
-                            .font(.largeTitle)
-                            .foregroundColor(.secondary)
+                    VStack(spacing: 16) {
+                        Image(systemName: "wand.and.stars")
+                            .font(.system(size: 48))
+                            .foregroundColor(.secondary.opacity(0.5))
                         Text("Select a skill to view details")
+                            .font(.title2)
                             .foregroundColor(.secondary)
+                        if viewModel.isLoading {
+                            ProgressView()
+                                .progressViewStyle(.circular)
+                        }
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(Color(.textBackgroundColor).opacity(0.5))
+                    .background(Color(.textBackgroundColor))
                 }
             }
             .navigationTitle("Skill Manager")

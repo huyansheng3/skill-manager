@@ -10,19 +10,21 @@ struct SkillDetailView: View {
         VStack(alignment: .leading, spacing: 16) {
             // Header
             HStack {
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 6) {
                     Text(skill.displayName)
                         .font(.title)
                         .fontWeight(.bold)
 
                     if !skill.isEnabled {
-                        Text("Disabled")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 2)
-                            .background(Color.secondary.opacity(0.2))
-                            .cornerRadius(4)
+                        HStack {
+                            Text("Disabled")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 3)
+                        .background(Color.secondary.opacity(0.2))
+                        .clipShape(Capsule())
                     }
                 }
 
@@ -41,38 +43,14 @@ struct SkillDetailView: View {
             }
 
             // Metadata
-            VStack(alignment: .leading, spacing: 8) {
-                if let author = skill.author {
-                    HStack {
-                        Text("Author:")
-                            .foregroundColor(.secondary)
-                        Text(author)
-                    }
+            VStack(alignment: .leading, spacing: 12) {
+                if let author = skill.author, !author.isEmpty {
+                    InfoRow(label: "Author", value: author)
                 }
 
-                HStack {
-                    Text("Location:")
-                        .foregroundColor(.secondary)
-                    switch skill.location {
-                    case .global:
-                        Text("Global")
-                    case .workspace(_):
-                        Text("Workspace")
-                    }
-                }
-
-                HStack {
-                    Text("Path:")
-                        .foregroundColor(.secondary)
-                    Text(skill.path.path)
-                        .font(.system(size: 12, design: .monospaced))
-                }
-
-                HStack {
-                    Text("Size:")
-                        .foregroundColor(.secondary)
-                    Text(formatSize(skill.size))
-                }
+                InfoRow(label: "Location", value: locationName)
+                InfoRow(label: "Path", value: skill.path.path, mono: true)
+                InfoRow(label: "Size", value: formatSize(skill.size))
             }
 
             Spacer()
@@ -87,6 +65,7 @@ struct SkillDetailView: View {
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
+                .controlSize(.large)
 
                 // Move actions
                 if case .global = skill.location, !viewModel.workspaces.isEmpty {
@@ -98,6 +77,7 @@ struct SkillDetailView: View {
                         }
                     }
                     .buttonStyle(.bordered)
+                    .controlSize(.large)
                     .frame(maxWidth: .infinity, alignment: .center)
                 }
 
@@ -108,8 +88,11 @@ struct SkillDetailView: View {
                         Text("Move to Global")
                     }
                     .buttonStyle(.bordered)
+                    .controlSize(.large)
                     .frame(maxWidth: .infinity, alignment: .center)
                 }
+
+                Divider()
 
                 // Delete
                 Button(role: .destructive, action: {
@@ -119,10 +102,12 @@ struct SkillDetailView: View {
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.bordered)
+                .controlSize(.large)
             }
         }
         .padding()
         .frame(minWidth: 300, maxWidth: .infinity)
+        .background(Color(.textBackgroundColor))
         .alert("Delete Skill", isPresented: $showDeleteConfirm) {
             Button("Cancel", role: .cancel) {}
             Button("Delete", role: .destructive) {
@@ -133,11 +118,53 @@ struct SkillDetailView: View {
         }
     }
 
+    private var locationName: String {
+        switch skill.location {
+        case .global:
+            if skill.path.path.contains(".claude") {
+                return "Global (Claude)"
+            } else if skill.path.path.contains(".codeflicker") {
+                return "Global (CodeFlicker)"
+            } else {
+                return "Global"
+            }
+        case .workspace:
+            if let workspace = viewModel.workspaces.first(where: { $0.id == skill.workspaceId }) {
+                return "Workspace: \(workspace.displayName)"
+            } else {
+                return "Workspace"
+            }
+        }
+    }
+
     private func formatSize(_ size: Int64) -> String {
         let formatter = ByteCountFormatter()
         formatter.allowedUnits = [.useKB, .useMB]
         formatter.countStyle = .file
         return formatter.string(fromByteCount: size)
+    }
+}
+
+private struct InfoRow: View {
+    let label: String
+    let value: String
+    var mono: Bool = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(label)
+                .font(.caption)
+                .foregroundColor(.secondary)
+            if mono {
+                Text(value)
+                    .font(.system(size: 12, design: .monospaced))
+                    .foregroundColor(.primary)
+                    .lineLimit(1)
+            } else {
+                Text(value)
+                    .foregroundColor(.primary)
+            }
+        }
     }
 }
 
