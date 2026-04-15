@@ -1,6 +1,17 @@
 import Foundation
 import SQLite3
 
+// JSON structure for CodeFlicker workspace list
+private struct DuetWorkspaceList: Codable {
+    let workspaces: [DuetWorkspace]
+}
+
+private struct DuetWorkspace: Codable {
+    let workspaceId: String
+    let name: String
+    let path: String
+}
+
 actor DuetSQLiteReader {
     private let defaultDBPath = "~/.codeflicker/data/codeflicker/duet.sqlite"
 
@@ -23,11 +34,11 @@ actor DuetSQLiteReader {
         let database = db!
         defer { sqlite3_close(database) }
 
+        // CodeFlicker stores workspace list in KV table
         let query = """
-            SELECT id, name, root_path FROM workspaces WHERE deleted_at IS NULL ORDER BY created_at DESC;
+            SELECT value FROM KwaipilotKV WHERE key = 'duetWorkspaceList:v1';
         """
 
-        var workspaces: [Workspace] = []
         var statement: OpaquePointer?
 
         guard sqlite3_prepare_v2(database, query, -1, &statement, nil) == SQLITE_OK else {
@@ -36,33 +47,45 @@ actor DuetSQLiteReader {
         }
         defer { sqlite3_finalize(statement) }
 
-        while sqlite3_step(statement) == SQLITE_ROW {
-            let idBytes = sqlite3_column_text(statement, 0)
-            let nameBytes = sqlite3_column_text(statement, 1)
-            let rootPathBytes = sqlite3_column_text(statement, 2)
+        var workspaces: [Workspace] = []
 
-            guard let idBytes = idBytes,
-                  let rootPathBytes = rootPathBytes else { continue }
+        if sqlite3_step(statement) == SQLITE_ROW {
+            // Get BLOB data
+            let blobPtr = sqlite3_column_blob(statement, 0)
+            let blobLength = Int(sqlite3_column_bytes(statement, 0))
 
-            let idString = String(cString: idBytes)
-            let name = nameBytes != nil ? String(cString: nameBytes!) : ""
-            let rootPath = String(cString: rootPathBytes)
+            let data = Data(bytes: blobPtr!, count: blobLength)
 
-            guard let uuid = UUID(uuidString: idString) else { continue }
+            // Parse JSON
+            do {
+                let decoder = JSONDecoder()
+                let workspaceList = try decoder.decode(DuetWorkspaceList.self, from: data)
 
-            // Workspace skills path: rootPath/.codeflicker/skills
-            let skillsPath = (rootPath as NSString)
-                .appendingPathComponent(".codeflicker/skills")
-            let skillsURL = URL(fileURLWithPath: skillsPath)
+                for duetWorkspace in workspaceList.workspaces {
+                    guard let uuid = UUID(uuidString: duetWorkspace.workspaceId) else {
+                        continue
+                    }
 
-            let workspace = Workspace(
-                id: uuid,
-                name: name,
-                rootPath: URL(fileURLWithPath: rootPath),
-                skillsPath: skillsURL
-            )
+                    let rootPathURL = URL(fileURLWithPath: duetWorkspace.path)
 
-            workspaces.append(workspace)
+                    // Workspace skills path: rootPath/.codeflicker/skills
+                    let skillsPath = (duetWorkspace.path as NSString)
+                        .appendingPathComponent(".codeflicker/skills")
+                    let skillsURL = URL(fileURLWithPath: skillsPath)
+
+                    let workspace = Workspace(
+                        id: uuid,
+                        name: duetWorkspace.name,
+                        rootPath: rootPathURL,
+                        skillsPath: skillsURL
+                    )
+
+                    workspaces.append(workspace)
+                }
+            } catch {
+                print("DuetSQLiteReader: Failed to parse JSON: \(error.localizedDescription)")
+                return []
+            }
         }
 
         return workspaces

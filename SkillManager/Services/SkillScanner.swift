@@ -49,7 +49,7 @@ actor SkillScanner {
 
         // Add custom paths
         let customPaths = getCustomGlobalPaths()
-        for (index, path) in customPaths.enumerated() {
+        for path in customPaths {
             let expandedPath = (path as NSString).expandingTildeInPath
             let url = URL(fileURLWithPath: expandedPath)
             let groupSkills = skills.filter { $0.path.deletingLastPathComponent() == url }
