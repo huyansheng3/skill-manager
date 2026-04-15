@@ -43,8 +43,8 @@
 				46B8FA7C2D7F3A3E00D1D785 /* Info.plist */,
 				46B8FA8B2D7F3A3E00D1D785 /* App */,
 				46B8FA8C2D7F3A3E00D1D785 /* Models */,
-				46B8FA8D2D7F3A3E00D1D785 /* Views */,
-				46B8FA8E2D7F3A3E00D1D785 /* ViewModels */,
+				46B8FA962D7F3A3E00D1D785 /* Views */,
+				46B8FA972D7F3A3E00D1D785 /* ViewModels */,
 				46B8FA8F2D7F3A3E00D1D785 /* Services */,
 				46B8FA902D7F3A3E00D1D785 /* Resources */,
 			);
@@ -73,14 +73,14 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		46B8FA8D2D7F3A3E00D1D785 /* Views */ = {
+		46B8FA962D7F3A3E00D1D785 /* Views */ = {
 			isa = PBXGroup;
 			children = (
 			);
 			path = Views;
 			sourceTree = "<group>";
 		};
-		46B8FA8E2D7F3A3E00D1D785 /* ViewModels */ = {
+		46B8FA972D7F3A3E00D1D785 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
 			);
