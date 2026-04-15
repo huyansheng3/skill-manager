@@ -11,9 +11,19 @@ class SkillListViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
 
-    private let scanner = SkillScanner()
-    private let sqliteReader = DuetSQLiteReader()
-    private let skillService = SkillService()
+    private let scanner: SkillScanner
+    private let sqliteReader: DuetSQLiteReader
+    private let skillService: SkillService
+
+    public init(
+        scanner: SkillScanner = SkillScanner(),
+        sqliteReader: DuetSQLiteReader = DuetSQLiteReader(),
+        skillService: SkillService = SkillService()
+    ) {
+        self.scanner = scanner
+        self.sqliteReader = sqliteReader
+        self.skillService = skillService
+    }
 
     var allSkills: [Skill] {
         var result = globalSkills
@@ -57,10 +67,24 @@ class SkillListViewModel: ObservableObject {
             // Load workspaces from SQLite
             workspaces = await sqliteReader.readWorkspaces()
 
-            // Load skills for each workspace
-            for workspace in workspaces {
-                let skills = await scanner.scanSkills(in: workspace)
-                workspaceSkills[workspace.id] = skills
+            // Load skills for each workspace in parallel
+            await withTaskGroup(of: (UUID, [Skill]?).self) { group in
+                for workspace in workspaces {
+                    group.addTask {
+                        do {
+                            let skills = await scanner.scanSkills(in: workspace)
+                            return (workspace.id, skills)
+                        } catch {
+                            print("SkillListViewModel: Failed to scan skills for workspace '\(workspace.name)' (id: \(workspace.id)): \(error.localizedDescription)")
+                            return (workspace.id, nil)
+                        }
+                    }
+                }
+                for await (id, skills) in group {
+                    if let skills = skills {
+                        workspaceSkills[id] = skills
+                    }
+                }
             }
         } catch {
             errorMessage = error.localizedDescription

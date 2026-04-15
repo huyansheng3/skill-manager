@@ -25,7 +25,7 @@ actor SkillScanner {
 
             let skillDirs = await fileSystem.listDirectories(at: url)
             for dir in skillDirs {
-                if let skill = parseSkill(from: dir, location: .global) {
+                if let skill = await parseSkill(from: dir, location: .global) {
                     skills.append(skill)
                 }
             }
@@ -41,7 +41,7 @@ actor SkillScanner {
 
         let skillDirs = await fileSystem.listDirectories(at: workspace.skillsPath)
         for dir in skillDirs {
-            if let skill = parseSkill(from: dir, location: .workspace(workspace.id)) {
+            if let skill = await parseSkill(from: dir, location: .workspace(workspace.id)) {
                 skills.append(skill)
             }
         }
@@ -49,7 +49,7 @@ actor SkillScanner {
         return skills
     }
 
-    private func parseSkill(from dir: URL, location: SkillLocation) -> Skill? {
+    private func parseSkill(from dir: URL, location: SkillLocation) async -> Skill? {
         let isEnabled = !dir.lastPathComponent.hasSuffix(".disabled")
         let metadata = await metadataParser.parseMetadata(from: dir)
         let size = await fileSystem.calculateDirectorySize(at: dir)
