@@ -13,13 +13,13 @@ actor SkillMetadataParser {
         self.fileSystem = fileSystem
     }
 
-    func parseMetadata(from skillDir: URL) -> SkillMetadata {
+    func parseMetadata(from skillDir: URL) async -> SkillMetadata {
         let name = skillDir.lastPathComponent.replacingOccurrences(of: ".disabled", with: "")
 
         // Check for skill.json first (common format)
         let skillJSONURL = skillDir.appendingPathComponent("skill.json")
-        if fileSystem.fileExists(at: skillJSONURL) {
-            if let content = fileSystem.readTextFile(at: skillJSONURL),
+        if await fileSystem.fileExists(at: skillJSONURL) {
+            if let content = await fileSystem.readTextFile(at: skillJSONURL),
                let data = content.data(using: .utf8),
                let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
                 let description = json["description"] as? String
@@ -32,16 +32,16 @@ actor SkillMetadataParser {
 
         // Check for README.md
         let readmeURL = skillDir.appendingPathComponent("README.md")
-        if fileSystem.fileExists(at: readmeURL) {
-            if let description = extractDescription(from: readmeURL) {
+        if await fileSystem.fileExists(at: readmeURL) {
+            if let description = await extractDescription(from: readmeURL) {
                 return SkillMetadata(name: name, description: description, author: nil)
             }
         }
 
         // Check for README
         let readmeNoExtURL = skillDir.appendingPathComponent("README")
-        if fileSystem.fileExists(at: readmeNoExtURL) {
-            if let description = extractDescription(from: readmeNoExtURL) {
+        if await fileSystem.fileExists(at: readmeNoExtURL) {
+            if let description = await extractDescription(from: readmeNoExtURL) {
                 return SkillMetadata(name: name, description: description, author: nil)
             }
         }
@@ -49,8 +49,8 @@ actor SkillMetadataParser {
         return SkillMetadata(name: name, description: nil, author: nil)
     }
 
-    private func extractDescription(from url: URL) -> String? {
-        guard let content = fileSystem.readTextFile(at: url) else {
+    private func extractDescription(from url: URL) async -> String? {
+        guard let content = await fileSystem.readTextFile(at: url) else {
             return nil
         }
 
