@@ -1,0 +1,62 @@
+<h2>功能范围 (第一版本)</h2>
+<p class="subtitle" data-multiselect>请选择需要包含的功能（可多选）</p>
+
+<div class="options" data-multiselect>
+  <div class="option" data-choice="scan" onclick="toggleSelect(this)">
+    <div class="letter">1</div>
+    <div class="content">
+      <h3>扫描全局技能目录</h3>
+      <p>扫描 ~/.claude/skills, ~/.codeflicker/skills 等常见路径，列出所有已安装技能</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="sqlite" onclick="toggleSelect(this)">
+    <div class="letter">2</div>
+    <div class="content">
+      <h3>读取 Duet 工作区数据库</h3>
+      <p>读取 ~/.codeflicker/data/codeflicker/duet.sqlite，列出所有工作区及其关联的技能</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="move" onclick="toggleSelect(this)">
+    <div class="letter">3</div>
+    <div class="content">
+      <h3>技能移动操作</h3>
+      <p>支持将全局技能移动到某个工作区内，避免全局污染；也可以将项目技能移回全局</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="enable-disable" onclick="toggleSelect(this)">
+    <div class="letter">4</div>
+    <div class="content">
+      <h3>启用/禁用技能</h3>
+      <p>可以临时禁用某个技能而不删除它（通过重命名目录/文件）</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="search" onclick="toggleSelect(this)">
+    <div class="letter">5</div>
+    <div class="content">
+      <h3>搜索筛选技能</h3>
+      <p>按名称、描述、位置搜索筛选技能列表</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="details" onclick="toggleSelect(this)">
+    <div class="letter">6</div>
+    <div class="content">
+      <h3>查看技能详情</h3>
+      <p>显示技能名称、描述、作者、文件路径等信息</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="delete" onclick="toggleSelect(this)">
+    <div class="letter">7</div>
+    <div class="content">
+      <h3>删除技能</h3>
+      <p>删除不再需要的技能</p>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle">点击选择需要的功能，选完后告诉我你的选择</p>

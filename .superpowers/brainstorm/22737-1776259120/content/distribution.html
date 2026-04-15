@@ -1,0 +1,32 @@
+<h2>分发安装方式</h2>
+<p class="subtitle">你希望用户如何安装这个应用</p>
+
+<div class="options">
+  <div class="option" data-choice="homebrew" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Homebrew Cask</h3>
+      <p>用户通过 `brew install --cask skill-manager` 安装，标准 macOS 开发工具分发方式</p>
+      <p>需要维护 Homebrew tap</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="script" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>安装脚本 + GitHub Release</h3>
+      <p>编译好 .app 压缩包上传到 GitHub Release，用户通过 curl 脚本下载安装</p>
+      <p>更简单，不需要维护 tap</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="both" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>两者都支持</h3>
+      <p>同时支持 Homebrew 和脚本安装，用户自选</p>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle">你希望哪种分发方式？</p>

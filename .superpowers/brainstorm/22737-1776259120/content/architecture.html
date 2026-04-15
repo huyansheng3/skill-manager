@@ -1,0 +1,83 @@
+<h2>架构设计</h2>
+<p class="subtitle">采用标准 SwiftUI 分层架构，三层清晰分离</p>
+
+<div class="pros-cons">
+  <div class="pros">
+    <h4>优点</h4>
+    <ul>
+      <li>原生纯 Swift/SwiftUI，无第三方依赖，编译体积小</li>
+      <li>符合 Swift 社区最佳实践，易于维护</li>
+      <li>测试方便，各层可独立测试</li>
+    </ul>
+  </div>
+  <div class="cons">
+    <h4>不足</h4>
+    <ul>
+      <li>需要了解 Swift 开发（但你只需要使用，不需要开发）</li>
+    </ul>
+  </div>
+</div>
+
+<h3>层级结构</h3>
+<div class="mockup">
+  <div class="mockup-header">项目结构</div>
+  <div class="mockup-body" style="padding: 1rem;">
+    <pre style="margin: 0; font-size: 0.9rem;">
+SkillManager/
+├── App/                # 入口和主窗口
+├── Views/              # SwiftUI 视图层
+│   ├── SkillList.swift
+│   ├── SkillDetail.swift
+│   ├── WorkspaceSection.swift
+│   └ ...
+├── ViewModels/         # 视图状态逻辑
+│   ├── SkillListViewModel.swift
+│   └ ...
+├── Models/             # 数据模型
+│   ├── Skill.swift
+│   ├── Workspace.swift
+│   └ ...
+├── Services/           # 业务服务层
+│   ├── SkillScanner.swift      # 扫描技能目录
+│   ├── SQLiteReader.swift      # 读取 Duet SQLite
+│   ├── SkillMover.swift        # 移动技能
+│   ├── FileSystem.swift        # 文件操作封装
+│   └ ...
+└── Resources/          # 资源文件
+    </pre>
+  </div>
+</div>
+
+<h3>数据模型</h3>
+<div class="split">
+  <div class="mockup">
+    <div class="mockup-header">Skill</div>
+    <div class="mockup-body" style="padding: 0.5rem;">
+<pre>
+- id: UUID
+- name: String
+- description: String?
+- author: String?
+- path: URL
+- location: LocationType
+  - global / workspace
+- isEnabled: Bool
+- workspaceId: UUID?
+</pre>
+    </div>
+  </div>
+  <div class="mockup">
+    <div class="mockup-header">Workspace</div>
+    <div class="mockup-body" style="padding: 0.5rem;">
+<pre>
+- id: UUID
+- name: String
+- path: String?
+- rootPath: String
+- skills: [Skill]
+</pre>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle">这个架构是否清晰合理？有没有需要调整的地方？</p>

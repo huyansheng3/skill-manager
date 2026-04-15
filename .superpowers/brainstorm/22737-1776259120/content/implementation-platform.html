@@ -1,0 +1,41 @@
+<h2>选择实现方式</h2>
+<p class="subtitle">你要求 "最极简/最原生" + "打包体积很小"，以下是几种 macOS 原生方案对比</p>
+
+<div class="options">
+  <div class="option" data-choice="swiftui" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Swift + SwiftUI 原生 App</h3>
+      <p>最原生体验，编译后体积小（~5MB），支持所有 macOS 特性，可以打包成 .app 或通过 brew 分发</p>
+      <p>适合 GUI 应用，响应式快</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="swiftcli" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Swift 命令行 + Terminal UI</h3>
+      <p>体积更小（~1MB），纯终端可交互，不需要窗口，适合开发者工具</p>
+      <p>无法通过鼠标可视化操作管理</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="electron" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Electron/Tauri</h3>
+      <p>Tauri 体积较小 (~30MB)，使用 Web 技术开发，比 Electron 轻量</p>
+      <p>但不如纯原生Swift小，不符合"最极简原生"要求</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="go" onclick="toggleSelect(this)">
+    <div class="letter">D</div>
+    <div class="content">
+      <h3>Go + 跨平台 GUI</h3>
+      <p>编译后单二进制，体积小，跨平台。但 macOS 原生集成度不如 Swift</p>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle">你的需求是做一个GUI应用还是命令行工具？请选择最符合你期望的方案</p>
