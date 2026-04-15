@@ -15,6 +15,14 @@
 		46B8FAA02D7F3A3E00D1D785 /* SkillListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B8FAA12D7F3A3E00D1D785 /* SkillListView.swift */; };
 		46B8FAA22D7F3A3E00D1D785 /* SkillManagerMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B8FAA32D7F3A3E00D1D785 /* SkillManagerMainView.swift */; };
 		46B8FAA52D7F3A3E00D1D785 /* SkillListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B8FAA42D7F3A3E00D1D785 /* SkillListViewModel.swift */; };
+		46B8FAA62D7F3A3E00D1D785 /* Skill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B8FAA72D7F3A3E00D1D785 /* Skill.swift */; };
+		46B8FAA82D7F3A3E00D1D785 /* SkillLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B8FAA92D7F3A3E00D1D785 /* SkillLocation.swift */; };
+		46B8FAAA2D7F3A3E00D1D785 /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B8FAAB2D7F3A3E00D1D785 /* Workspace.swift */; };
+		46B8FAAC2D7F3A3E00D1D785 /* DuetSQLiteReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B8FAAE2D7F3A3E00D1D785 /* DuetSQLiteReader.swift */; };
+		46B8FAAE2D7F3A3E00D1D785 /* FileSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B8FAAF2D7F3A3E00D1D785 /* FileSystem.swift */; };
+		46B8FAAf2D7F3A3E00D1D785 /* SkillMetadataParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B8FAA02D7F3A3E00D1D785 /* SkillMetadataParser.swift */; };
+		46B8FAB12D7F3A3E00D1D785 /* SkillScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B8FAB22D7F3A3E00D1D785 /* SkillScanner.swift */; };
+		46B8FAB32D7F3A3E00D1D785 /* SkillService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B8FAB42D7F3A3E00D1D785 /* SkillService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +45,14 @@
 		46B8FAA12D7F3A3E00D1D785 /* SkillListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Views/SkillListView.swift"; sourceTree = "<group>"; };
 		46B8FAA32D7F3A3E00D1D785 /* SkillManagerMainView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Views/SkillManagerMainView.swift"; sourceTree = "<group>"; };
 		46B8FAA42D7F3A3E00D1D785 /* SkillListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ViewModels/SkillListViewModel.swift"; sourceTree = "<group>"; };
+		46B8FAA72D7F3A3E00D1D785 /* Skill.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Models/Skill.swift"; sourceTree = "<group>"; };
+		46B8FAA92D7F3A3E00D1D785 /* SkillLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Models/SkillLocation.swift"; sourceTree = "<group>"; };
+		46B8FAAB2D7F3A3E00D1D785 /* Workspace.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Models/Workspace.swift"; sourceTree = "<group>"; };
+		46B8FAAE2D7F3A3E00D1D785 /* DuetSQLiteReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Services/DuetSQLiteReader.swift"; sourceTree = "<group>"; };
+		46B8FAAF2D7F3A3E00D1D785 /* FileSystem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Services/FileSystem.swift"; sourceTree = "<group>"; };
+		46B8FAA02D7F3A3E00D1D785 /* SkillMetadataParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Services/SkillMetadataParser.swift"; sourceTree = "<group>"; };
+		46B8FAB22D7F3A3E00D1D785 /* SkillScanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Services/SkillScanner.swift"; sourceTree = "<group>"; };
+		46B8FAB42D7F3A3E00D1D785 /* SkillService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Services/SkillService.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +99,9 @@
 		46B8FA8C2D7F3A3E00D1D785 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				46B8FAA72D7F3A3E00D1D785 /* Skill.swift */,
+				46B8FAA92D7F3A3E00D1D785 /* SkillLocation.swift */,
+				46B8FAAB2D7F3A3E00D1D785 /* Workspace.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -111,6 +130,11 @@
 		46B8FA8F2D7F3A3E00D1D785 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				46B8FAAE2D7F3A3E00D1D785 /* DuetSQLiteReader.swift */,
+				46B8FAAF2D7F3A3E00D1D785 /* FileSystem.swift */,
+				46B8FAA02D7F3A3E00D1D785 /* SkillMetadataParser.swift */,
+				46B8FAB22D7F3A3E00D1D785 /* SkillScanner.swift */,
+				46B8FAB42D7F3A3E00D1D785 /* SkillService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -201,6 +225,14 @@
 				46B8FAA02D7F3A3E00D1D785 /* SkillListView.swift in Sources */,
 				46B8FAA22D7F3A3E00D1D785 /* SkillManagerMainView.swift in Sources */,
 				46B8FAA52D7F3A3E00D1D785 /* SkillListViewModel.swift in Sources */,
+				46B8FAA62D7F3A3E00D1D785 /* Skill.swift in Sources */,
+				46B8FAA82D7F3A3E00D1D785 /* SkillLocation.swift in Sources */,
+				46B8FAAA2D7F3A3E00D1D785 /* Workspace.swift in Sources */,
+				46B8FAAC2D7F3A3E00D1D785 /* DuetSQLiteReader.swift in Sources */,
+				46B8FAAE2D7F3A3E00D1D785 /* FileSystem.swift in Sources */,
+				46B8FAAf2D7F3A3E00D1D785 /* SkillMetadataParser.swift in Sources */,
+				46B8FAB12D7F3A3E00D1D785 /* SkillScanner.swift in Sources */,
+				46B8FAB32D7F3A3E00D1D785 /* SkillService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

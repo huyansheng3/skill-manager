@@ -1,2 +1,7 @@
 
 .worktrees/
+# Build
+build/
+# Xcode
+*.xcuserdatad
+*.xcuserstate
