@@ -33,19 +33,13 @@ class SkillListViewModel: ObservableObject {
     }
 
     var globalGroups: [GlobalGroup] {
-        let paths = [
-            ("Claude", "~/.claude/skills"),
-            ("CodeFlicker", "~/.codeflicker/skills")
-        ]
+        let groups = scanner.groupGlobalSkills(globalSkills)
 
-        return paths.compactMap { (name, path) in
-            let expandedPath = (path as NSString).expandingTildeInPath
-            let url = URL(fileURLWithPath: expandedPath)
-            let groupSkills = globalSkills.filter { $0.path.deletingLastPathComponent() == url }
+        return groups.compactMap { (name, path, skills) in
             if searchText.isEmpty {
-                return GlobalGroup(name: name, path: path, skills: groupSkills)
+                return GlobalGroup(name: name, path: path, skills: skills)
             } else {
-                let filtered = groupSkills.filter {
+                let filtered = skills.filter {
                     $0.displayName.lowercased().contains(searchText.lowercased())
                 }
                 return filtered.isEmpty ? nil : GlobalGroup(name: name, path: path, skills: filtered)
@@ -143,6 +137,11 @@ class SkillListViewModel: ObservableObject {
         } catch {
             errorMessage = "Failed to delete skill: \(error.localizedDescription)"
         }
+    }
+
+    func addCustomGlobalPath(_ path: String) async {
+        await scanner.addCustomGlobalPath(path)
+        await load()
     }
 
     private func reloadAfterChange() async {

@@ -3,6 +3,8 @@ import SwiftUI
 struct SkillManagerMainView: View {
     @EnvironmentObject var viewModel: SkillListViewModel
     @State private var selectedWorkspace: Workspace? = nil
+    @State private var showAddGlobalPath = false
+    @State private var newGlobalPath = ""
 
     var body: some View {
         NavigationStack {
@@ -50,6 +52,14 @@ struct SkillManagerMainView: View {
                     }
                     .accessibilityLabel("Refresh skills")
                 }
+                ToolbarItem(placement: .primaryAction) {
+                    Button(action: {
+                        showAddGlobalPath = true
+                    }) {
+                        Image(systemName: "plus")
+                    }
+                    .accessibilityLabel("Add custom global path")
+                }
             }
         }
         .onAppear {
@@ -65,6 +75,21 @@ struct SkillManagerMainView: View {
             Button("OK") {}
         } message: {
             Text(viewModel.errorMessage ?? "Unknown error")
+        }
+        .alert("Add Custom Global Path", isPresented: $showAddGlobalPath) {
+            TextField("Path (e.g. ~/my-custom-skills)", text: $newGlobalPath)
+            Button("Cancel", role: .cancel) {}
+            Button("Add") {
+                if !newGlobalPath.isEmpty {
+                    Task {
+                        await viewModel.addCustomGlobalPath(newGlobalPath)
+                        newGlobalPath = ""
+                        await viewModel.load()
+                    }
+                }
+            }
+        } message: {
+            Text("Add an additional directory path to scan for global skills.")
         }
     }
 }

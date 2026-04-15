@@ -5,6 +5,9 @@ struct SkillDetailView: View {
     let skill: Skill
 
     @State private var showDeleteConfirm = false
+    @State private var readmeContent: String?
+    @State private var isLoadingReadme = false
+    private let fileSystem = FileSystem.shared
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -31,26 +34,46 @@ struct SkillDetailView: View {
                 Spacer()
             }
 
-            // Description
-            if let description = skill.description {
-                VStack(alignment: .leading) {
-                    Text("Description")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    Text(description)
-                        .foregroundColor(.primary)
-                }
-            }
-
             // Metadata
             VStack(alignment: .leading, spacing: 12) {
                 if let author = skill.author, !author.isEmpty {
                     InfoRow(label: "Author", value: author)
                 }
 
+                if let description = skill.description, !description.isEmpty {
+                    InfoRow(label: "Description", value: description)
+                }
+
                 InfoRow(label: "Location", value: locationName)
                 InfoRow(label: "Path", value: skill.path.path, mono: true)
                 InfoRow(label: "Size", value: formatSize(skill.size))
+            }
+
+            // README Preview
+            if readmeContent != nil || isLoadingReadme {
+                Divider()
+
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("README")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+
+                    if isLoadingReadme {
+                        ProgressView()
+                            .frame(maxWidth: .infinity, alignment: .center)
+                    } else if let readmeContent = readmeContent {
+                        ScrollView {
+                            Text(readmeContent)
+                                .font(.system(size: 13))
+                                .foregroundColor(.primary)
+                                .multilineTextAlignment(.leading)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .frame(maxHeight: 300)
+                        .background(Color(.textBackgroundColor))
+                        .cornerRadius(6)
+                    }
+                }
             }
 
             Spacer()
@@ -116,6 +139,9 @@ struct SkillDetailView: View {
         } message: {
             Text("Are you sure you want to delete '\(skill.displayName)'? This cannot be undone.")
         }
+        .onAppear {
+            loadReadme()
+        }
     }
 
     private var locationName: String {
@@ -143,6 +169,37 @@ struct SkillDetailView: View {
         formatter.countStyle = .file
         return formatter.string(fromByteCount: size)
     }
+
+    private func loadReadme() {
+        isLoadingReadme = true
+
+        // Try README.md, then README
+        let candidates = [
+            skill.path.appendingPathComponent("README.md"),
+            skill.path.appendingPathComponent("README"),
+            skill.path.appendingPathComponent("readme.md"),
+            skill.path.appendingPathComponent("readme")
+        ]
+
+        Task {
+            for candidate in candidates {
+                if await fileSystem.fileExists(at: candidate) {
+                    if let content = await fileSystem.readTextFile(at: candidate) {
+                        await MainActor.run {
+                            self.readmeContent = content
+                            self.isLoadingReadme = false
+                        }
+                        return
+                    }
+                }
+            }
+
+            await MainActor.run {
+                self.readmeContent = nil
+                self.isLoadingReadme = false
+            }
+        }
+    }
 }
 
 private struct InfoRow: View {
@@ -163,6 +220,8 @@ private struct InfoRow: View {
             } else {
                 Text(value)
                     .foregroundColor(.primary)
+                    .lineLimit(nil)
+                    .multilineTextAlignment(.leading)
             }
         }
     }
