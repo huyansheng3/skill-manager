@@ -13,10 +13,15 @@ actor DuetSQLiteReader {
         }
 
         var db: OpaquePointer?
-        guard sqlite3_open(dbPath, &db) == SQLITE_OK else {
+        if sqlite3_open(expandedPath, &db) != SQLITE_OK {
+            if db != nil {
+                sqlite3_close(db)
+            }
+            print("DuetSQLiteReader: Failed to open database at \(expandedPath)")
             return []
         }
-        defer { sqlite3_close(db) }
+        let database = db!
+        defer { sqlite3_close(database) }
 
         let query = """
             SELECT id, name, root_path FROM workspaces WHERE deleted_at IS NULL ORDER BY created_at DESC;
@@ -25,7 +30,8 @@ actor DuetSQLiteReader {
         var workspaces: [Workspace] = []
         var statement: OpaquePointer?
 
-        guard sqlite3_prepare_v2(db, query, -1, &statement, nil) == SQLITE_OK else {
+        guard sqlite3_prepare_v2(database, query, -1, &statement, nil) == SQLITE_OK else {
+            print("DuetSQLiteReader: Failed to prepare query")
             return []
         }
         defer { sqlite3_finalize(statement) }
