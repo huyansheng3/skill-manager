@@ -8,8 +8,14 @@ struct Skill: Identifiable, Equatable {
     let path: URL
     let location: SkillLocation
     var isEnabled: Bool
-    let workspaceId: UUID?
     let size: Int64
+
+    var workspaceId: UUID? {
+        if case .workspace(let id) = location {
+            return id
+        }
+        return nil
+    }
 
     var displayName: String {
         if isEnabled {
