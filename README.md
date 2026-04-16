@@ -24,8 +24,8 @@ macOS 原生极简 Agent Skill 管理工具。用于管理 Claude Code / CodeFli
 ### via Install Script (recommended)
 
 ```bash
-# Direct download and install from CDN
-curl -fsSL https://h3.static.yximgs.com/kcdn/cdn-kcdn112115/manual-upload/SkillManager.zip | bash
+# Install from GitHub install script
+curl -fsSL https://raw.githubusercontent.com/huyansheng3/skill-manager/main/install.sh | bash
 ```
 
 Or if you have cloned the repo:
@@ -33,19 +33,11 @@ Or if you have cloned the repo:
 ./install.sh
 ```
 
-### via Homebrew Cask
-
-The Cask formula is available in `Formula/skill-manager.rb`:
-
-```bash
-# Tap your tap then install
-brew install --cask skill-manager
-```
 
 ## Build from Source
 
 ```bash
-git clone https://github.com/[your-username]/skill-manager.git
+git clone https://github.com/huyansheng3/skill-manager
 cd skill-manager
 xcodebuild -project SkillManager/SkillManager.xcodeproj -scheme SkillManager -configuration Release clean build
 # The .app will be at build/Release/SkillManager.app
