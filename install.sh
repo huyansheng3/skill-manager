@@ -1,33 +1,44 @@
 #!/bin/bash
 set -e
 
-echo "Installing Skill Manager..."
+echo "Installing SkillManager..."
 
-# Determine app path
-APP_PATH="/Applications/SkillManager.app"
+# Download the zip
+echo "Downloading SkillManager.zip..."
+curl -f -L https://h3.static.yximgs.com/kcdn/cdn-kcdn112115/manual-upload/SkillManager-33eedc274a00.zip -o /tmp/SkillManager.zip
 
-# Download latest release from GitHub
-# TODO: Update with actual repo URL
-LATEST_URL="https://github.com/your-username/skill-manager/releases/latest/download/SkillManager.zip"
+# Check SHA256
+EXPECTED_SHA256="33eedc274a00db4c5716b614f29c23932607541598e11b1400fda5426de6e76a"
+ACTUAL_SHA256=$(shasum -a 256 /tmp/SkillManager.zip | awk '{print $1}')
 
-TMP_DIR=$(mktemp -d)
-ZIP_FILE="$TMP_DIR/SkillManager.zip"
+if [ "$ACTUAL_SHA256" != "$EXPECTED_SHA256" ]; then
+    echo "ERROR: SHA256 checksum mismatch"
+    echo "Expected: $EXPECTED_SHA256"
+    echo "Got:      $ACTUAL_SHA256"
+    rm -f /tmp/SkillManager.zip
+    exit 1
+fi
 
-echo "Downloading latest release..."
-curl -L -o "$ZIP_FILE" "$LATEST_URL"
+# Unzip
+echo "Unzipping..."
+unzip -q /tmp/SkillManager.zip -d /tmp
 
-echo "Extracting..."
-unzip -q "$ZIP_FILE" -d "$TMP_DIR"
-
-if [ -d "$APP_PATH" ]; then
+# Install to /Applications
+if [ -d "/Applications/SkillManager.app" ]; then
     echo "Removing old version..."
-    rm -rf "$APP_PATH"
+    rm -rf "/Applications/SkillManager.app"
 fi
 
 echo "Installing to /Applications..."
-cp -R "$TMP_DIR/SkillManager.app" "$APP_PATH"
+mv /tmp/SkillManager.app /Applications/
 
-echo "Cleaning up..."
-rm -rf "$TMP_DIR"
+# Cleanup
+rm -f /tmp/SkillManager.zip
 
-echo "✅ Skill Manager installed successfully to /Applications/SkillManager.app"
+echo ""
+echo "🔑 Removing quarantine attribute (required for non-notarized apps)..."
+xattr -r -d com.apple.quarantine /Applications/SkillManager.app || true
+
+echo ""
+echo "✅ SkillManager installed successfully!"
+echo "You can find SkillManager in Launchpad or run: open /Applications/SkillManager.app"

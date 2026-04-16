@@ -6,166 +6,170 @@ struct SkillDetailView: View {
 
     @State private var showDeleteConfirm = false
     @State private var readmeContent: String?
+    @State private var isReadmeTruncated = false
     @State private var isLoadingReadme = false
+    @State private var readmeLoadTask: Task<Void, Never>?
     private let fileSystem = FileSystem.shared
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                // Header
-                VStack(alignment: .leading, spacing: 12) {
-                    HStack(alignment: .top, spacing: 12) {
-                        // Skill Icon
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 14)
-                                .fill(
-                                    LinearGradient(
-                                        colors: [Color.blue.opacity(0.8), Color.purple.opacity(0.8)],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
+        VStack(alignment: .leading, spacing: 12) {
+            // Header
+            VStack(alignment: .leading, spacing: 12) {
+                HStack(alignment: .top, spacing: 12) {
+                    // Skill Icon
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 14)
+                            .fill(
+                                LinearGradient(
+                                    colors: [Color.blue.opacity(0.8), Color.purple.opacity(0.8)],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
                                 )
-                                .frame(width: 56, height: 56)
+                            )
+                            .frame(width: 56, height: 56)
 
-                            Image(systemName: "wrench.and.screwdriver")
-                                .font(.system(size: 28, weight: .semibold))
-                                .foregroundColor(.white)
-                        }
-                        .shadow(color: Color.blue.opacity(0.3), radius: 8, x: 0, y: 4)
+                        Image(systemName: "wrench.and.screwdriver")
+                            .font(.system(size: 28, weight: .semibold))
+                            .foregroundColor(.white)
+                    }
+                    .shadow(color: Color.blue.opacity(0.3), radius: 8, x: 0, y: 4)
 
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text(skill.displayName)
-                                .font(.system(size: 24, weight: .bold, design: .rounded))
-                                .foregroundColor(.primary)
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(skill.displayName)
+                            .font(.system(size: 24, weight: .bold, design: .rounded))
+                            .foregroundColor(.primary)
 
-                            if !skill.isEnabled {
-                                HStack(spacing: 6) {
-                                    Circle()
-                                        .fill(Color.secondary.opacity(0.6))
-                                        .frame(width: 6, height: 6)
-                                    Text("Disabled")
-                                        .font(.system(size: 12, weight: .medium))
-                                        .foregroundColor(.secondary)
-                                }
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 5)
-                                .background(Color.secondary.opacity(0.12))
-                                .clipShape(Capsule())
+                        if !skill.isEnabled {
+                            HStack(spacing: 6) {
+                                Circle()
+                                    .fill(Color.secondary.opacity(0.6))
+                                    .frame(width: 6, height: 6)
+                                Text("Disabled")
+                                    .font(.system(size: 12, weight: .medium))
+                                    .foregroundColor(.secondary)
                             }
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 5)
+                            .background(Color.secondary.opacity(0.12))
+                            .clipShape(Capsule())
                         }
+                    }
 
+                    Spacer()
+                }
+            }
+            .padding(.bottom, 4)
+
+            // Metadata Card
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Details")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundColor(.secondary)
+
+                VStack(alignment: .leading, spacing: 8) {
+                    if let author = skill.author, !author.isEmpty {
+                        InfoRow(label: "Author", value: author)
+                    }
+
+                    if let description = skill.description, !description.isEmpty {
+                        InfoRow(label: "Description", value: description)
+                    }
+
+                    InfoRow(label: "Location", value: locationName)
+                    InfoRow(label: "Path", value: skill.path.path, mono: true)
+                    InfoRow(label: "Size", value: formatSize(skill.size))
+                }
+                .padding(10)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color(.controlBackgroundColor))
+                )
+            }
+
+            // README Preview - Main content area
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(spacing: 6) {
+                    Image(systemName: "doc.text")
+                        .font(.system(size: 12, weight: .semibold))
+                    Text("skill.md")
+                        .font(.system(size: 13, weight: .semibold))
+                }
+                .foregroundColor(.secondary)
+
+                if isLoadingReadme {
+                    HStack {
+                        Spacer()
+                        ProgressView()
                         Spacer()
                     }
-                }
-                .padding(.bottom, 8)
-
-                // Metadata Card
-                VStack(alignment: .leading, spacing: 14) {
-                    Text("Details")
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundColor(.secondary)
-                        .padding(.bottom, 2)
-
-                    VStack(alignment: .leading, spacing: 14) {
-                        if let author = skill.author, !author.isEmpty {
-                            InfoRow(label: "Author", value: author)
-                        }
-
-                        if let description = skill.description, !description.isEmpty {
-                            InfoRow(label: "Description", value: description)
-                        }
-
-                        InfoRow(label: "Location", value: locationName)
-                        InfoRow(label: "Path", value: skill.path.path, mono: true)
-                        InfoRow(label: "Size", value: formatSize(skill.size))
-                    }
-                    .padding(16)
+                    .padding(.vertical, 30)
                     .background(
-                        RoundedRectangle(cornerRadius: 14)
-                            .fill(Color(.controlBackgroundColor))
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color(.textBackgroundColor))
+                    )
+                } else if let readmeContent = readmeContent {
+                    ScrollView {
+                        Text(readmeContent)
+                            .font(.system(size: 13))
+                            .foregroundColor(.primary)
+                            .multilineTextAlignment(.leading)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(14)
+                    }
+                    .frame(maxHeight: .infinity)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color(.textBackgroundColor))
+                    )
+                } else {
+                    HStack {
+                        Spacer()
+                        Text("No README found")
+                            .font(.system(size: 13))
+                            .foregroundColor(.secondary)
+                        Spacer()
+                    }
+                    .padding(.vertical, 30)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color(.textBackgroundColor))
                     )
                 }
+            }
+            .frame(maxHeight: .infinity, alignment: .top)
 
-                // README Preview
-                if readmeContent != nil || isLoadingReadme {
-                    VStack(alignment: .leading, spacing: 10) {
+            // Actions (compact)
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Actions")
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundColor(.secondary)
+
+                HStack(spacing: 8) {
+                    Button(action: {
+                        Task { await viewModel.toggleEnableDisable(skill) }
+                    }) {
                         HStack(spacing: 6) {
-                            Image(systemName: "doc.text")
-                                .font(.system(size: 12, weight: .semibold))
-                            Text("skill.md")
-                                .font(.system(size: 13, weight: .semibold))
+                            Image(systemName: skill.isEnabled ? "eye.slash" : "eye")
+                                .font(.system(size: 12, weight: .medium))
+                            Text(skill.isEnabled ? "Disable" : "Enable")
+                                .font(.system(size: 12, weight: .medium))
                         }
-                        .foregroundColor(.secondary)
-
-                        if isLoadingReadme {
-                            HStack {
-                                Spacer()
-                                ProgressView()
-                                Spacer()
-                            }
-                            .padding(.vertical, 40)
-                            .background(
-                                RoundedRectangle(cornerRadius: 14)
-                                    .fill(Color(.textBackgroundColor))
-                            )
-                        } else if let readmeContent = readmeContent {
-                            ScrollView {
-                                Text(readmeContent)
-                                    .font(.system(size: 13))
-                                    .foregroundColor(.primary)
-                                    .multilineTextAlignment(.leading)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .padding(16)
-                            }
-                            .frame(maxHeight: 280)
-                            .background(
-                                RoundedRectangle(cornerRadius: 14)
-                                    .fill(Color(.textBackgroundColor))
-                            )
-                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 7)
+                        .padding(.horizontal, 10)
+                        .background(
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(Color(.controlBackgroundColor))
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.secondary.opacity(0.25), lineWidth: 1)
+                        )
+                        .foregroundColor(.primary)
                     }
-                }
+                    .buttonStyle(.plain)
 
-                Spacer()
-                    .frame(height: 8)
-
-                // Actions
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("Actions")
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundColor(.secondary)
-
-                    VStack(spacing: 12) {
-                        // Toggle enable/disable
-                        Button(action: {
-                            Task { await viewModel.toggleEnableDisable(skill) }
-                        }) {
-                            HStack(spacing: 10) {
-                                Image(systemName: skill.isEnabled ? "eye.slash" : "eye")
-                                    .font(.system(size: 16, weight: .semibold))
-                                Text(skill.isEnabled ? "Disable Skill" : "Enable Skill")
-                                    .font(.system(size: 15, weight: .semibold))
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
-                            .background(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .fill(
-                                        LinearGradient(
-                                            colors: skill.isEnabled
-                                                ? [Color.orange.opacity(0.9), Color.orange.opacity(0.7)]
-                                                : [Color.green.opacity(0.9), Color.green.opacity(0.7)],
-                                            startPoint: .topLeading,
-                                            endPoint: .bottomTrailing
-                                        )
-                                    )
-                            )
-                            .foregroundColor(.white)
-                            .shadow(color: (skill.isEnabled ? Color.orange : Color.green).opacity(0.3), radius: 4, x: 0, y: 2)
-                        }
-                        .buttonStyle(.plain)
-
-                        // Move actions
+                    Group {
                         if case .global = skill.location, !viewModel.workspaces.isEmpty {
                             Menu {
                                 ForEach(viewModel.workspaces) { workspace in
@@ -179,89 +183,85 @@ struct SkillDetailView: View {
                                     }
                                 }
                             } label: {
-                                HStack(spacing: 10) {
+                                HStack(spacing: 6) {
                                     Image(systemName: "tray.and.arrow.down")
-                                        .font(.system(size: 16, weight: .semibold))
-                                    Text("Move to Workspace")
-                                        .font(.system(size: 15, weight: .semibold))
-                                    Spacer()
-                                    Image(systemName: "chevron.up.chevron.down")
-                                        .font(.system(size: 12))
+                                        .font(.system(size: 12, weight: .medium))
+                                    Text("Move")
+                                        .font(.system(size: 12, weight: .medium))
+                                    Image(systemName: "chevron.down")
+                                        .font(.system(size: 9))
                                 }
                                 .frame(maxWidth: .infinity)
-                                .padding(.vertical, 14)
-                                .padding(.horizontal, 16)
+                                .padding(.vertical, 7)
+                                .padding(.horizontal, 10)
                                 .background(
-                                    RoundedRectangle(cornerRadius: 12)
+                                    RoundedRectangle(cornerRadius: 8)
                                         .fill(Color(.controlBackgroundColor))
                                 )
                                 .overlay(
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .stroke(Color.blue.opacity(0.4), lineWidth: 1.5)
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color.secondary.opacity(0.25), lineWidth: 1)
                                 )
-                                .foregroundColor(.blue)
+                                .foregroundColor(.primary)
                             }
                             .buttonStyle(.plain)
-                        }
-
-                        if case .workspace = skill.location {
+                        } else if case .workspace = skill.location {
                             Button(action: {
                                 Task { await viewModel.moveSkillToGlobal(skill) }
                             }) {
-                                HStack(spacing: 10) {
+                                HStack(spacing: 6) {
                                     Image(systemName: "globe")
-                                        .font(.system(size: 16, weight: .semibold))
-                                    Text("Move to Global")
-                                        .font(.system(size: 15, weight: .semibold))
+                                        .font(.system(size: 12, weight: .medium))
+                                    Text("Move")
+                                        .font(.system(size: 12, weight: .medium))
                                 }
                                 .frame(maxWidth: .infinity)
-                                .padding(.vertical, 14)
-                                .padding(.horizontal, 16)
+                                .padding(.vertical, 7)
+                                .padding(.horizontal, 10)
                                 .background(
-                                    RoundedRectangle(cornerRadius: 12)
+                                    RoundedRectangle(cornerRadius: 8)
                                         .fill(Color(.controlBackgroundColor))
                                 )
                                 .overlay(
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .stroke(Color.purple.opacity(0.4), lineWidth: 1.5)
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color.secondary.opacity(0.25), lineWidth: 1)
                                 )
-                                .foregroundColor(.purple)
+                                .foregroundColor(.primary)
                             }
                             .buttonStyle(.plain)
+                        } else {
+                            Color.clear
+                                .frame(maxWidth: .infinity)
                         }
-
-                        Divider()
-                            .padding(.vertical, 4)
-
-                        // Delete
-                        Button(role: .destructive, action: {
-                            showDeleteConfirm = true
-                        }) {
-                            HStack(spacing: 10) {
-                                Image(systemName: "trash")
-                                    .font(.system(size: 16, weight: .semibold))
-                                Text("Delete Skill")
-                                    .font(.system(size: 15, weight: .semibold))
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
-                            .padding(.horizontal, 16)
-                            .background(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .fill(Color.red.opacity(0.08))
-                            )
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .stroke(Color.red.opacity(0.4), lineWidth: 1.5)
-                            )
-                            .foregroundColor(.red)
-                        }
-                        .buttonStyle(.plain)
                     }
+
+                    Button(role: .destructive, action: {
+                        showDeleteConfirm = true
+                    }) {
+                        HStack(spacing: 6) {
+                            Image(systemName: "trash")
+                                .font(.system(size: 12, weight: .medium))
+                            Text("Delete")
+                                .font(.system(size: 12, weight: .medium))
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 7)
+                        .padding(.horizontal, 10)
+                        .background(
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(Color.red.opacity(0.08))
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.red.opacity(0.35), lineWidth: 1)
+                        )
+                        .foregroundColor(.red)
+                    }
+                    .buttonStyle(.plain)
                 }
             }
-            .padding()
         }
+        .padding(18)
         .frame(minWidth: 340, maxWidth: .infinity)
         .background(Color(.textBackgroundColor))
         .alert("Delete Skill", isPresented: $showDeleteConfirm) {
@@ -275,8 +275,11 @@ struct SkillDetailView: View {
         .onAppear {
             loadReadme()
         }
-        .onChange(of: skill.id) { _ in
+        .onChange(of: skill.path.path) { _ in
             loadReadme()
+        }
+        .onDisappear {
+            readmeLoadTask?.cancel()
         }
     }
 
@@ -307,8 +310,11 @@ struct SkillDetailView: View {
     }
 
     private func loadReadme() {
+        readmeLoadTask?.cancel()
+
         // Reset state immediately when skill changes
         readmeContent = nil
+        isReadmeTruncated = false
         isLoadingReadme = true
 
         // Try skill.md first (used by Claude skills), then README.md, then README
@@ -321,12 +327,19 @@ struct SkillDetailView: View {
             skill.path.appendingPathComponent("readme")
         ]
 
-        Task {
+        readmeLoadTask = Task(priority: .userInitiated) {
             for candidate in candidates {
+                if Task.isCancelled {
+                    return
+                }
                 if await fileSystem.fileExists(at: candidate) {
-                    if let content = await fileSystem.readTextFile(at: candidate) {
+                    if let preview = await fileSystem.readTextFilePreview(at: candidate, maxBytes: 64 * 1024) {
+                        if Task.isCancelled {
+                            return
+                        }
                         await MainActor.run {
-                            self.readmeContent = content
+                            self.readmeContent = preview.content
+                            self.isReadmeTruncated = preview.isTruncated
                             self.isLoadingReadme = false
                         }
                         return
@@ -334,8 +347,12 @@ struct SkillDetailView: View {
                 }
             }
 
+            if Task.isCancelled {
+                return
+            }
             await MainActor.run {
                 self.readmeContent = nil
+                self.isReadmeTruncated = false
                 self.isLoadingReadme = false
             }
         }
@@ -348,9 +365,9 @@ private struct InfoRow: View {
     var mono: Bool = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 3) {
             Text(label)
-                .font(.caption)
+                .font(.system(size: 11, weight: .medium))
                 .foregroundColor(.secondary)
             if mono {
                 Text(value)
@@ -359,6 +376,7 @@ private struct InfoRow: View {
                     .lineLimit(1)
             } else {
                 Text(value)
+                    .font(.system(size: 13))
                     .foregroundColor(.primary)
                     .lineLimit(nil)
                     .multilineTextAlignment(.leading)
