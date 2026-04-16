@@ -79,53 +79,128 @@ struct SkillDetailView: View {
             Spacer()
 
             // Actions
-            VStack(spacing: 12) {
+            VStack(spacing: 14) {
                 // Toggle enable/disable
                 Button(action: {
                     Task { await viewModel.toggleEnableDisable(skill) }
                 }) {
-                    Text(skill.isEnabled ? "Disable Skill" : "Enable Skill")
-                        .frame(maxWidth: .infinity)
+                    HStack(spacing: 10) {
+                        Image(systemName: skill.isEnabled ? "eye.slash" : "eye")
+                            .font(.system(size: 16, weight: .semibold))
+                        Text(skill.isEnabled ? "Disable Skill" : "Enable Skill")
+                            .font(.system(size: 15, weight: .semibold))
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(
+                                LinearGradient(
+                                    colors: skill.isEnabled
+                                        ? [Color.orange.opacity(0.9), Color.orange.opacity(0.7)]
+                                        : [Color.green.opacity(0.9), Color.green.opacity(0.7)],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
+                    )
+                    .foregroundColor(.white)
+                    .shadow(color: (skill.isEnabled ? Color.orange : Color.green).opacity(0.3), radius: 4, x: 0, y: 2)
                 }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.large)
+                .buttonStyle(.plain)
 
                 // Move actions
                 if case .global = skill.location, !viewModel.workspaces.isEmpty {
-                    Menu("Move to Workspace") {
+                    Menu {
                         ForEach(viewModel.workspaces) { workspace in
-                            Button(workspace.displayName) {
+                            Button(action: {
                                 Task { await viewModel.moveSkill(skill, to: workspace) }
+                            }) {
+                                HStack {
+                                    Image(systemName: "folder")
+                                    Text(workspace.displayName)
+                                }
                             }
                         }
+                    } label: {
+                        HStack(spacing: 10) {
+                            Image(systemName: "tray.and.arrow.down")
+                                .font(.system(size: 16, weight: .semibold))
+                            Text("Move to Workspace")
+                                .font(.system(size: 15, weight: .semibold))
+                            Spacer()
+                            Image(systemName: "chevron.up.chevron.down")
+                                .font(.system(size: 12))
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
+                        .padding(.horizontal, 16)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Color(.controlBackgroundColor))
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color.blue.opacity(0.4), lineWidth: 1.5)
+                        )
+                        .foregroundColor(.blue)
                     }
-                    .buttonStyle(.bordered)
-                    .controlSize(.large)
-                    .frame(maxWidth: .infinity, alignment: .center)
+                    .buttonStyle(.plain)
                 }
 
                 if case .workspace = skill.location {
                     Button(action: {
                         Task { await viewModel.moveSkillToGlobal(skill) }
                     }) {
-                        Text("Move to Global")
+                        HStack(spacing: 10) {
+                            Image(systemName: "globe")
+                                .font(.system(size: 16, weight: .semibold))
+                            Text("Move to Global")
+                                .font(.system(size: 15, weight: .semibold))
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
+                        .padding(.horizontal, 16)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Color(.controlBackgroundColor))
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color.purple.opacity(0.4), lineWidth: 1.5)
+                        )
+                        .foregroundColor(.purple)
                     }
-                    .buttonStyle(.bordered)
-                    .controlSize(.large)
-                    .frame(maxWidth: .infinity, alignment: .center)
+                    .buttonStyle(.plain)
                 }
 
                 Divider()
+                    .padding(.vertical, 4)
 
                 // Delete
                 Button(role: .destructive, action: {
                     showDeleteConfirm = true
                 }) {
-                    Text("Delete Skill")
-                        .frame(maxWidth: .infinity)
+                    HStack(spacing: 10) {
+                        Image(systemName: "trash")
+                            .font(.system(size: 16, weight: .semibold))
+                        Text("Delete Skill")
+                            .font(.system(size: 15, weight: .semibold))
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .padding(.horizontal, 16)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color.red.opacity(0.08))
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.red.opacity(0.4), lineWidth: 1.5)
+                    )
+                    .foregroundColor(.red)
                 }
-                .buttonStyle(.bordered)
-                .controlSize(.large)
+                .buttonStyle(.plain)
             }
         }
         .padding()
@@ -140,6 +215,9 @@ struct SkillDetailView: View {
             Text("Are you sure you want to delete '\(skill.displayName)'? This cannot be undone.")
         }
         .onAppear {
+            loadReadme()
+        }
+        .onChange(of: skill.id) { _ in
             loadReadme()
         }
     }
@@ -171,6 +249,8 @@ struct SkillDetailView: View {
     }
 
     private func loadReadme() {
+        // Reset state immediately when skill changes
+        readmeContent = nil
         isLoadingReadme = true
 
         // Try skill.md first (used by Claude skills), then README.md, then README

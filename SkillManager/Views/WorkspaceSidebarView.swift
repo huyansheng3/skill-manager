@@ -36,7 +36,7 @@ struct WorkspaceSidebarView: View {
 
                     if viewModel.isGroupExpanded(group.path) {
                         VStack(alignment: .leading, spacing: 2) {
-                            ForEach(group.skills) { skill in
+                            ForEach(group.skills, id: \.id) { skill in
                                 SkillRowView(
                                     skill: skill,
                                     isSelected: viewModel.selectedSkill?.id == skill.id
@@ -111,6 +111,18 @@ struct WorkspaceSidebarView: View {
                                 .font(.subheadline)
                                 .fontWeight(.semibold)
                                 .foregroundColor(.primary)
+
+                            Spacer()
+
+                            let skillsCount = viewModel.filteredSkills(for: workspace.id).count
+                            if skillsCount > 0 {
+                                Text("\(skillsCount)")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 2)
+                                    .background(Capsule().fill(Color.secondary.opacity(0.2)))
+                            }
                         }
                         .contentShape(Rectangle())
                         .onTapGesture {
@@ -127,7 +139,7 @@ struct WorkspaceSidebarView: View {
                             let skills = viewModel.filteredSkills(for: workspace.id)
                             if !skills.isEmpty {
                                 VStack(alignment: .leading, spacing: 2) {
-                                    ForEach(skills) { skill in
+                                    ForEach(skills, id: \.id) { skill in
                                         SkillRowView(
                                             skill: skill,
                                             isSelected: viewModel.selectedSkill?.id == skill.id
