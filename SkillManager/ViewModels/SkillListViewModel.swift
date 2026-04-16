@@ -5,13 +5,13 @@ import Combine
 class SkillListViewModel: ObservableObject {
     @Published var globalSkills: [Skill] = []
     @Published var workspaces: [Workspace] = []
-    @Published var workspaceSkills: [UUID: [Skill]] = [:]
+    @Published var workspaceSkills: [String: [Skill]] = [:]
     @Published var searchText: String = ""
     @Published var selectedSkill: Skill?
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
     @Published var expandedGroups: Set<String> = []
-    @Published var expandedWorkspaces: Set<UUID> = []
+    @Published var expandedWorkspaces: Set<String> = []
 
     private let scanner: SkillScanner
     private let sqliteReader: DuetSQLiteReader
@@ -71,7 +71,7 @@ class SkillListViewModel: ObservableObject {
         return expandedGroups.contains(path)
     }
 
-    func toggleWorkspaceExpanded(_ id: UUID) {
+    func toggleWorkspaceExpanded(_ id: String) {
         if expandedWorkspaces.contains(id) {
             expandedWorkspaces.remove(id)
         } else {
@@ -79,7 +79,7 @@ class SkillListViewModel: ObservableObject {
         }
     }
 
-    func isWorkspaceExpanded(_ id: UUID) -> Bool {
+    func isWorkspaceExpanded(_ id: String) -> Bool {
         return expandedWorkspaces.contains(id)
     }
 
@@ -103,7 +103,7 @@ class SkillListViewModel: ObservableObject {
         return result
     }
 
-    func filteredSkills(for workspaceId: UUID) -> [Skill] {
+    func filteredSkills(for workspaceId: String) -> [Skill] {
         let skills = workspaceSkills[workspaceId] ?? []
         if searchText.isEmpty {
             return skills
@@ -123,7 +123,7 @@ class SkillListViewModel: ObservableObject {
             workspaces = await sqliteReader.readWorkspaces()
 
             // Load skills for each workspace in parallel
-            await withTaskGroup(of: (UUID, [Skill]?).self) { group in
+            await withTaskGroup(of: (String, [Skill]?).self) { group in
                 for workspace in workspaces {
                     group.addTask { [self] in
                         let skills = await self.scanner.scanSkills(in: workspace)
@@ -181,7 +181,7 @@ class SkillListViewModel: ObservableObject {
     }
 
     func addCustomGlobalPath(_ path: String) async {
-        await scanner.addCustomGlobalPath(path)
+        scanner.addCustomGlobalPath(path)
         await load()
     }
 

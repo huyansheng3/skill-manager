@@ -30,7 +30,7 @@ struct Skill: Identifiable, Equatable {
         self.size = size
     }
 
-    var workspaceId: UUID? {
+    var workspaceId: String? {
         if case .workspace(let id) = location {
             return id
         }

@@ -1,7 +1,7 @@
 import Foundation
 
 struct Workspace: Identifiable, Equatable {
-    let id: UUID
+    let id: String
     let name: String
     let rootPath: URL
     let skillsPath: URL

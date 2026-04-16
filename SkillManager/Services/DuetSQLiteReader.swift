@@ -62,10 +62,6 @@ actor DuetSQLiteReader {
                 let workspaceList = try decoder.decode(DuetWorkspaceList.self, from: data)
 
                 for duetWorkspace in workspaceList.workspaces {
-                    guard let uuid = UUID(uuidString: duetWorkspace.workspaceId) else {
-                        continue
-                    }
-
                     let rootPathURL = URL(fileURLWithPath: duetWorkspace.path)
 
                     // Workspace skills path: rootPath/.codeflicker/skills
@@ -74,7 +70,7 @@ actor DuetSQLiteReader {
                     let skillsURL = URL(fileURLWithPath: skillsPath)
 
                     let workspace = Workspace(
-                        id: uuid,
+                        id: duetWorkspace.workspaceId,
                         name: duetWorkspace.name,
                         rootPath: rootPathURL,
                         skillsPath: skillsURL
