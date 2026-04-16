@@ -5,10 +5,10 @@ echo "Installing SkillManager..."
 
 # Download the zip
 echo "Downloading SkillManager.zip..."
-curl -f -L https://h3.static.yximgs.com/kcdn/cdn-kcdn112115/manual-upload/SkillManager-33eedc274a00.zip -o /tmp/SkillManager.zip
+curl -f -L https://h3.static.yximgs.com/kcdn/cdn-kcdn112115/manual-upload/SkillManager-150cabfcc856.zip -o /tmp/SkillManager.zip
 
 # Check SHA256
-EXPECTED_SHA256="33eedc274a00db4c5716b614f29c23932607541598e11b1400fda5426de6e76a"
+EXPECTED_SHA256="150cabfcc856afe379e07fa14069ce4ea0f383faf5c9d88c49092306feb9490e"
 ACTUAL_SHA256=$(shasum -a 256 /tmp/SkillManager.zip | awk '{print $1}')
 
 if [ "$ACTUAL_SHA256" != "$EXPECTED_SHA256" ]; then
