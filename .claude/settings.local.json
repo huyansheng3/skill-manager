@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(swift build 2>&1)",
+      "Bash(cd /Users/huyansheng/Documents/2021/skill-manage/SkillManager && swift build -c release)",
+      "Bash(cd /Users/huyansheng/Documents/2021/skill-manage/SkillManager && swift build 2>&1)",
+      "Bash(cp .build/release/SkillManager /Users/huyansheng/Documents/2021/skill-manage/SkillManager.app/Contents/MacOS/\ncodesign --force --deep --sign - /Users/huyansheng/Documents/2021/skill-manage/SkillManager.app)",
+      "Bash(open /Users/huyansheng/Documents/2021/skill-manage/SkillManager.app)",
+      "Bash(cp .build/release/SkillManager /Users/huyansheng/Documents/2021/skill-manage/SkillManager.app/Contents/MacOS/\ncodesign --force --deep --sign - /Users/huyansheng/Documents/2021/skill-manage/SkillManager.app\nopen /Users/huyansheng/Documents/2021/skill-manage/SkillManager.app)",
+      "Bash(cd /Users/huyansheng/Documents/2021/skill-manage/SkillManager && swift package generate-xcodeproj)",
+      "Bash(xcodebuild -scheme SkillManager -configuration Release -derivedDataPath build clean build)",
+      "Bash(APP_PATH=\"SkillManager.app\")",
+      "Bash(rm -rf \"$APP_PATH\" SkillManager.zip)",
+      "Bash(mkdir -p \"$APP_PATH/Contents/MacOS\")",
+      "Bash(mkdir -p \"$APP_PATH/Contents/Resources\")",
+      "Bash(cp SkillManager/.build/release/SkillManager \"$APP_PATH/Contents/MacOS/\")",
+      "Bash(chmod +x \"$APP_PATH/Contents/MacOS/SkillManager\")",
+      "Bash(cp SkillManager/Info.plist \"$APP_PATH/Contents/\")",
+      "Bash(cp SkillManager/Resources/SkillManager.icns \"$APP_PATH/Contents/Resources/\")",
+      "Bash(echo \"Created $APP_PATH\")",
+      "Read(//Users/huyansheng/Documents/2021/skill-manage/SkillManager/$APP_PATH/**)",
+      "Bash(cp SkillManager/.build/release/SkillManager SkillManager.app/Contents/MacOS/ && chmod +x SkillManager.app/Contents/MacOS/SkillManager)",
+      "Bash(\\\\\nzip -q -r SkillManager.zip SkillManager.app && \\\\\nls -lh SkillManager.zip && \\\\\nshasum -a 256 SkillManager.zip)"
+    ]
+  }
+}

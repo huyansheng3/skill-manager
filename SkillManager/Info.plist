@@ -6,6 +6,8 @@
     <string>SkillManager</string>
     <key>CFBundleIdentifier</key>
     <string>com.yourcompany.SkillManager</string>
+    <key>CFBundleIconFile</key>
+    <string>SkillManager</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>

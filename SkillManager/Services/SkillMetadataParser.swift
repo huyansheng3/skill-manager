@@ -7,15 +7,39 @@ struct SkillMetadata {
 }
 
 actor SkillMetadataParser {
+    private struct CacheEntry {
+        let metadata: SkillMetadata
+        let directoryModificationDate: Date?
+    }
+
     private let fileSystem: FileSystem
+    private var metadataCache: [String: CacheEntry] = [:]
 
     init(fileSystem: FileSystem = .shared) {
         self.fileSystem = fileSystem
     }
 
     func parseMetadata(from skillDir: URL) async -> SkillMetadata {
-        let name = skillDir.lastPathComponent.replacingOccurrences(of: ".disabled", with: "")
+        let cacheKey = skillDir.path
+        let dirModificationDate = await fileSystem.modificationDate(at: skillDir)
 
+        if let cached = metadataCache[cacheKey],
+           cached.directoryModificationDate == dirModificationDate {
+            return cached.metadata
+        }
+
+        let name = skillDir.lastPathComponent.replacingOccurrences(of: ".disabled", with: "")
+        let parsed = await parseMetadataUncached(name: name, skillDir: skillDir)
+
+        metadataCache[cacheKey] = CacheEntry(
+            metadata: parsed,
+            directoryModificationDate: dirModificationDate
+        )
+
+        return parsed
+    }
+
+    private func parseMetadataUncached(name: String, skillDir: URL) async -> SkillMetadata {
         // Check for skill.json first (common format)
         let skillJSONURL = skillDir.appendingPathComponent("skill.json")
         if await fileSystem.fileExists(at: skillJSONURL) {

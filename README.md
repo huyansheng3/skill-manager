@@ -2,6 +2,8 @@
 
 macOS 原生极简 Agent Skill 管理工具。用于管理 Claude Code / CodeFlicker 的技能，支持全局技能和工作区技能的移动管理。
 
+![](./screenshot.png)
+
 ## Features
 
 - 📋 扫描全局技能目录 (`~/.claude/skills`, `~/.codeflicker/skills`)
@@ -22,13 +24,21 @@ macOS 原生极简 Agent Skill 管理工具。用于管理 Claude Code / CodeFli
 ### via Install Script (recommended)
 
 ```bash
-# Download and install the latest release from GitHub
-curl -fsSL https://raw.githubusercontent.com/[your-username]/skill-manager/main/install.sh | bash
+# Direct download and install from CDN
+curl -fsSL https://h3.static.yximgs.com/kcdn/cdn-kcdn112115/manual-upload/SkillManager.zip | bash
 ```
 
-### via Homebrew (TODO)
+Or if you have cloned the repo:
+```bash
+./install.sh
+```
+
+### via Homebrew Cask
+
+The Cask formula is available in `Formula/skill-manager.rb`:
 
 ```bash
+# Tap your tap then install
 brew install --cask skill-manager
 ```
 

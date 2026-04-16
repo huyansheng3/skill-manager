@@ -26,6 +26,9 @@ let package = Package(
                 "Services",
                 "ViewModels",
                 "Views",
+            ],
+            resources: [
+                .process("Resources")
             ]
         )
     ]

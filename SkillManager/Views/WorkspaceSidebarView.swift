@@ -46,6 +46,7 @@ struct WorkspaceSidebarView: View {
                                     viewModel.selectedSkill = skill
                                     selectedWorkspace = nil
                                 }
+                                .id(skill.id)
                             }
                         }
                         .padding(.leading, 16)
@@ -69,11 +70,13 @@ struct WorkspaceSidebarView: View {
                     }
                 }
                 .padding(.vertical, 4)
+                .id("global-\(group.path)")
             }
 
             if !viewModel.workspaces.isEmpty {
                 Divider()
                     .padding(.vertical, 4)
+                    .id("workspaces-divider")
 
                 HStack {
                     Text("Workspaces")
@@ -98,6 +101,7 @@ struct WorkspaceSidebarView: View {
                     .buttonStyle(.plain)
                 }
                 .padding(.horizontal, 8)
+                .id("workspaces-header")
 
                 ForEach(viewModel.workspaces) { workspace in
                     VStack(alignment: .leading, spacing: 6) {
@@ -149,6 +153,7 @@ struct WorkspaceSidebarView: View {
                                             viewModel.selectedSkill = skill
                                             selectedWorkspace = workspace
                                         }
+                                        .id(skill.id)
                                     }
                                 }
                                 .padding(.leading, 16)
@@ -164,10 +169,7 @@ struct WorkspaceSidebarView: View {
                     }
                     .padding(.vertical, 6)
                     .padding(.horizontal, 8)
-                    .background(
-                        RoundedRectangle(cornerRadius: 6)
-                            .fill(selectedWorkspace?.id == workspace.id ? Color.accentColor.opacity(0.15) : Color.clear)
-                    )
+                    .id("workspace-\(workspace.id)")
                 }
             }
         }

@@ -9,13 +9,14 @@ struct SkillDetailView: View {
     @State private var isReadmeTruncated = false
     @State private var isLoadingReadme = false
     @State private var readmeLoadTask: Task<Void, Never>?
-    private let fileSystem = FileSystem.shared
+    @State private var lastReadmeLoadDate: Date = .distantPast
+    private let readmeDebounceInterval: TimeInterval = 0.12
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             // Header
-            VStack(alignment: .leading, spacing: 12) {
-                HStack(alignment: .top, spacing: 12) {
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(alignment: .top, spacing: 10) {
                     // Skill Icon
                     ZStack {
                         RoundedRectangle(cornerRadius: 14)
@@ -34,10 +35,15 @@ struct SkillDetailView: View {
                     }
                     .shadow(color: Color.blue.opacity(0.3), radius: 8, x: 0, y: 4)
 
-                    VStack(alignment: .leading, spacing: 6) {
+                    VStack(alignment: .leading, spacing: 3) {
                         Text(skill.displayName)
                             .font(.system(size: 24, weight: .bold, design: .rounded))
                             .foregroundColor(.primary)
+
+                        Text("\(locationName) · \(formatSize(skill.size))")
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundColor(.secondary)
+                            .lineLimit(1)
 
                         if !skill.isEnabled {
                             HStack(spacing: 6) {
@@ -49,7 +55,7 @@ struct SkillDetailView: View {
                                     .foregroundColor(.secondary)
                             }
                             .padding(.horizontal, 10)
-                            .padding(.vertical, 5)
+                            .padding(.vertical, 3)
                             .background(Color.secondary.opacity(0.12))
                             .clipShape(Capsule())
                         }
@@ -58,33 +64,24 @@ struct SkillDetailView: View {
                     Spacer()
                 }
             }
-            .padding(.bottom, 4)
+            .padding(.bottom, 2)
 
-            // Metadata Card
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Details")
-                    .font(.system(size: 13, weight: .semibold))
+            // Path
+            HStack(spacing: 6) {
+                Image(systemName: "folder")
+                    .font(.system(size: 11, weight: .medium))
                     .foregroundColor(.secondary)
-
-                VStack(alignment: .leading, spacing: 8) {
-                    if let author = skill.author, !author.isEmpty {
-                        InfoRow(label: "Author", value: author)
-                    }
-
-                    if let description = skill.description, !description.isEmpty {
-                        InfoRow(label: "Description", value: description)
-                    }
-
-                    InfoRow(label: "Location", value: locationName)
-                    InfoRow(label: "Path", value: skill.path.path, mono: true)
-                    InfoRow(label: "Size", value: formatSize(skill.size))
-                }
-                .padding(10)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color(.controlBackgroundColor))
-                )
+                Text(skill.path.path)
+                    .font(.system(size: 12, design: .monospaced))
+                    .foregroundColor(.primary)
+                    .lineLimit(1)
             }
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(Color(.controlBackgroundColor))
+            )
 
             // README Preview - Main content area
             VStack(alignment: .leading, spacing: 8) {
@@ -108,19 +105,27 @@ struct SkillDetailView: View {
                             .fill(Color(.textBackgroundColor))
                     )
                 } else if let readmeContent = readmeContent {
-                    ScrollView {
-                        Text(readmeContent)
-                            .font(.system(size: 13))
-                            .foregroundColor(.primary)
-                            .multilineTextAlignment(.leading)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(14)
+                    VStack(alignment: .leading, spacing: 8) {
+                        ScrollView {
+                            Text(readmeContent)
+                                .font(.system(size: 13))
+                                .foregroundColor(.primary)
+                                .multilineTextAlignment(.leading)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(14)
+                        }
+                        .frame(maxHeight: .infinity)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Color(.textBackgroundColor))
+                        )
+
+                        if isReadmeTruncated {
+                            Text("Preview only (large file).")
+                                .font(.system(size: 11))
+                                .foregroundColor(.secondary)
+                        }
                     }
-                    .frame(maxHeight: .infinity)
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(Color(.textBackgroundColor))
-                    )
                 } else {
                     HStack {
                         Spacer()
@@ -327,13 +332,24 @@ struct SkillDetailView: View {
             skill.path.appendingPathComponent("readme")
         ]
 
+        let now = Date()
+        let shouldDebounce = now.timeIntervalSince(lastReadmeLoadDate) < readmeDebounceInterval
+        lastReadmeLoadDate = now
+
         readmeLoadTask = Task(priority: .userInitiated) {
+            if shouldDebounce {
+                try? await Task.sleep(nanoseconds: UInt64(readmeDebounceInterval * 1_000_000_000))
+                if Task.isCancelled {
+                    return
+                }
+            }
+
             for candidate in candidates {
                 if Task.isCancelled {
                     return
                 }
-                if await fileSystem.fileExists(at: candidate) {
-                    if let preview = await fileSystem.readTextFilePreview(at: candidate, maxBytes: 64 * 1024) {
+                if FileManager.default.fileExists(atPath: candidate.path) {
+                    if let preview = FastTextFileReader.readPreview(at: candidate, maxBytes: 64 * 1024) {
                         if Task.isCancelled {
                             return
                         }

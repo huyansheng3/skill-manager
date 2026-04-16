@@ -2,6 +2,21 @@
 .worktrees/
 # Build
 build/
+.build/
+*.dSYM
 # Xcode
 *.xcuserdatad
 *.xcuserstate
+*.xcworkspace
+!SkillManager.xcodeproj/project.pbxproj
+!SkillManager.xcodeproj/project.xcworkspace/contents.xcworkspacedata
+# Compiled app and release zip
+SkillManager.app/
+SkillManager.zip
+# Local configuration
+.codeflicker/
+# Temporary files
+tmp/
+*.log
+# macOS
+.DS_Store
